@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blessed Hub - The Ultimate Free Scripting Utility</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="background-grid"></div>
+    <div class="light-rays"></div>
+    <div class="bg-image-overlay" id="bgImageOverlay"></div>
+    <div class="snow-container" id="snowContainer"></div>
+    <div class="rain-container" id="rainContainer"></div>
+
+    <!-- Theme Toggle Button -->
+    <button type="button" class="theme-settings-btn" id="themeSettingsBtn" title="Tema Ayarları">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+    </button>
+
+    <!-- Theme Panel Overlay -->
+    <div class="theme-panel-overlay" id="themePanelOverlay"></div>
+
+    <!-- Theme Settings Panel -->
+    <div class="theme-panel" id="themePanel">
+        <div class="theme-panel-header">
+            <h3>Tema & Efektler</h3>
+            <button class="theme-panel-close" id="themePanelClose">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="theme-panel-content">
+            <div class="theme-section">
+                <span class="theme-section-title">Hava Efektleri</span>
+                <div class="theme-item">
+                    <span>Kar Yağışı</span>
+                    <div class="theme-toggle" data-effect="snow" id="toggleSnow"></div>
+                </div>
+                <div class="theme-item">
+                    <span>Yağmur</span>
+                    <div class="theme-toggle" data-effect="rain" id="toggleRain"></div>
+                </div>
+            </div>
+            <div class="theme-section">
+                <span class="theme-section-title">Arka Plan</span>
+                <div class="theme-item">
+                    <span>Arka Plan Görseli</span>
+                    <div class="theme-toggle" data-effect="bgImage" id="toggleBgImage"></div>
+                </div>
+                <div class="theme-item">
+                    <span>Particle Efekti</span>
+                    <div class="theme-toggle theme-toggle-on" data-effect="particles" id="toggleParticles"></div>
+                </div>
+            </div>
+            <div class="theme-section">
+                <span class="theme-section-title">Tema</span>
+                <div class="theme-options">
+                    <button class="theme-option active" data-theme="dark" title="Koyu">🌙</button>
+                    <button class="theme-option" data-theme="blue" title="Mavi">💙</button>
+                    <button class="theme-option" data-theme="purple" title="Mor">💜</button>
+                    <button class="theme-option" data-theme="green" title="Yeşil">💚</button>
+                    <button class="theme-option" data-theme="red" title="Kırmızı">❤️</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header/Navigation -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">Blessed Hub</div>
+            <button class="hamburger-menu" id="hamburgerMenu" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <nav class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#games" class="nav-link">Games</a>
+                <a href="#executors" class="nav-link">Executors</a>
+                <a href="#showcase" class="nav-link">Showcase</a>
+                <a href="#developers" class="nav-link">Developers</a>
+                <a href="https://discord.gg/BGJ5wsAQXy" target="_blank" class="nav-link">Discord</a>
+                <div class="api-status">
+                    <span class="status-dot status-dot-development"></span>
+                    <span class="status-text">In Development</span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="main">
+        <section class="hero">
+            <div class="container">
+                <a href="#get-key" class="btn btn-get-key">GET KEY</a>
+                <h1 class="hero-title">
+                    <span class="title-main">Blessed</span>
+                    <span class="title-accent">Hub</span>
+                </h1>
+                <p class="hero-subtitle">Welcome to Blessed Hub! Blessed Hub is a completely unique, free, and optimized script designed for the best experience.</p>
+            </div>
+        </section>
+
+        <!-- Statistics Section -->
+        <section class="statistics">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-card stat-card-red">
+                        <div class="stat-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                            </svg>
+                        </div>
+                        <div class="stat-label">TOTAL EXECUTIONS</div>
+                        <div class="stat-value stat-value-red">207.695</div>
+                        <div class="stat-subtext">All time</div>
+                    </div>
+                    <div class="stat-card stat-card-green">
+                        <div class="stat-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        <div class="stat-label">DAILY EXECUTIONS</div>
+                        <div class="stat-value stat-value-green">702</div>
+                        <div class="stat-subtext">Today</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Code Snippet Section -->
+        <section class="code-section">
+            <div class="container">
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-keyword">loadstring</span>
+                        <span class="code-punctuation">(</span>
+                        <span class="code-function">game</span>
+                        <span class="code-punctuation">:</span>
+                        <span class="code-function">HttpGet</span>
+                        <span class="code-punctuation">(</span>
+                        <span class="code-string">"https://raw.githubusercontent.com/beraatwr/loader/refs/heads/main/loader.lua"</span>
+                        <span class="code-punctuation">)</span>
+                        <span class="code-punctuation">)()</span>
+                    </div>
+                    <div class="code-actions">
+                        <button class="code-action-btn" id="copyCode" title="Copy">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </button>
+                        <button class="code-action-btn" id="maximizeCode" title="Maximize">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Section -->
+        <section class="comparison" id="comparison">
+            <div class="container">
+                <div class="section-tag">COMPARISON</div>
+                <h2 class="section-title">Why we're the best</h2>
+                <p class="section-subtitle">The ultimate scripting tool, without the downsides.</p>
+                <div class="comparison-grid">
+                    <div class="comparison-card comparison-card-ours">
+                        <div class="comparison-header">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="3" y1="6" x2="21" y2="6"></line>
+                                <line x1="3" y1="12" x2="21" y2="12"></line>
+                                <line x1="3" y1="18" x2="21" y2="18"></line>
+                            </svg>
+                        </div>
+                        <ul class="comparison-list">
+                            <li class="comparison-item comparison-item-check">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>Free</span>
+                            </li>
+                            <li class="comparison-item comparison-item-check">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>Quick support</span>
+                            </li>
+                            <li class="comparison-item comparison-item-check">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>Easy to Use</span>
+                            </li>
+                            <li class="comparison-item comparison-item-check">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>Supports 99.99% of Executors</span>
+                            </li>
+                            <li class="comparison-item comparison-item-check">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>Instant Updates</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="comparison-card comparison-card-others">
+                        <div class="comparison-header">
+                            <span>Others</span>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <ul class="comparison-list">
+                            <li class="comparison-item comparison-item-cross">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                                <span>Paid</span>
+                            </li>
+                            <li class="comparison-item comparison-item-cross">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                                <span>Bad, slow support</span>
+                            </li>
+                            <li class="comparison-item comparison-item-cross">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                                <span>Complicated install process</span>
+                            </li>
+                            <li class="comparison-item comparison-item-cross">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                                <span>Doesn't support most executors</span>
+                            </li>
+                            <li class="comparison-item comparison-item-cross">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                                <span>Slow Updates</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <div class="container">
+                <div class="features-tag">Features</div>
+                <h2 class="features-title">Why Use Blessed Hub?</h2>
+                <p class="features-subtitle">Every reason to choose Blessed Hub, none to doubt it.</p>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"></line>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">100% Free</h3>
+                        <p class="feature-description">Completely free to use with no hidden costs or premium features.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Always Improving</h3>
+                        <p class="feature-description">Continuous development and enhancements based on user feedback.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 4 23 10 17 10"></polyline>
+                                <polyline points="1 20 1 14 7 14"></polyline>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Fast Updates</h3>
+                        <p class="feature-description">Regular updates with new features and bug fixes delivered quickly.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Games Section -->
+        <section class="games" id="games">
+            <div class="container">
+                <div class="section-tag">Games</div>
+                <h2 class="section-title">Supported Games</h2>
+                <p class="section-subtitle">Premium scripts for the best Roblox games</p>
+                <div class="games-grid">
+                    <!-- Jailbreak -->
+                    <div class="game-card">
+                        <div class="game-screenshots">
+                            <img src="https://thumbnails.roblox.com/v1/games/icons?universeIds=606849621&size=768x432&format=Png&isCircular=false" alt="Jailbreak" class="game-image" onerror="this.onerror=null; this.src='https://cdn.static.pikoya.com/robloxgo/games/606849621/thumbnail_1'">
+                            <img src="https://thumbnails.roblox.com/v1/games/icons?universeIds=606849621&size=768x432&format=Png&isCircular=false" alt="Jailbreak" class="game-image" onerror="this.onerror=null; this.src='https://cdn.static.pikoya.com/robloxgo/games/606849621/thumbnail_2'">
+                        </div>
+                        <div class="game-content">
+                            <h3 class="game-title">Jailbreak</h3>
+                            <p class="game-description">Experience the ultimate cops and robbers game! Rob banks, escape prison, and become the most wanted criminal or join the police force to stop them. With our premium script, unlock all vehicles, weapons, and features instantly.</p>
+                            <div class="game-script-box">
+                                <code class="game-script-code">loadstring(game:HttpGet("https://blessed.fun/scripts/jailbreak/loader.lua"))()</code>
+                                <button class="game-script-copy" data-script='loadstring(game:HttpGet("https://blessed.fun/scripts/jailbreak/loader.lua"))()' title="Copy">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="game-links">
+                                <a href="https://www.roblox.com/games/606849621/Jailbreak" class="btn btn-roblox" target="_blank">Play on Roblox</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- The Strongest Battlegrounds -->
+                    <div class="game-card">
+                        <div class="game-screenshots">
+                            <img src="https://thumbnails.roblox.com/v1/games/icons?universeIds=10449761463&size=768x432&format=Png&isCircular=false" alt="The Strongest Battlegrounds" class="game-image" onerror="this.onerror=null; this.src='https://cdn.static.pikoya.com/robloxgo/games/10449761463/thumbnail_1'">
+                            <img src="https://cdn.static.pikoya.com/robloxgo/games/10449761463/thumbnail_2" alt="The Strongest Battlegrounds" class="game-image" onerror="this.onerror=null; this.src='https://cdn.static.pikoya.com/robloxgo/games/10449761463/thumbnail_3'">
+                        </div>
+                        <div class="game-content">
+                            <h3 class="game-title">The Strongest Battlegrounds</h3>
+                            <p class="game-description">Master the art of combat in this intense fighting game! Train your character, unlock powerful abilities, and dominate the battlegrounds. Our script provides auto-farm, auto-train, and all premium features.</p>
+                            <div class="game-script-box">
+                                <code class="game-script-code">loadstring(game:HttpGet("https://blessed.fun/scripts/tsb/loader.lua"))()</code>
+                                <button class="game-script-copy" data-script='loadstring(game:HttpGet("https://blessed.fun/scripts/tsb/loader.lua"))()' title="Copy">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="game-links">
+                                <a href="https://www.roblox.com/games/10449761463/The-Strongest-Battlegrounds" class="btn btn-roblox" target="_blank">Play on Roblox</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Evade -->
+                    <div class="game-card">
+                        <div class="game-screenshots">
+                            <img src="https://thumbnails.roblox.com/v1/games/icons?universeIds=9872472334&size=768x432&format=Png&isCircular=false" alt="Evade" class="game-image" onerror="this.onerror=null; this.src='https://cdn.static.pikoya.com/robloxgo/games/9872472334/thumbnail_1'">
+                            <img src="https://thumbnails.roblox.com/v1/games/icons?universeIds=9872472334&size=768x432&format=Png&isCircular=false" alt="Evade" class="game-image" onerror="this.onerror=null; this.src='https://cdn.static.pikoya.com/robloxgo/games/9872472334/thumbnail_2'">
+                        </div>
+                        <div class="game-content">
+                            <h3 class="game-title">Evade</h3>
+                            <p class="game-description">Survive the chase in this thrilling horror game! Run from the monster, solve puzzles, and escape with your friends. Our script includes ESP, auto-solve, speed boost, and more survival tools.</p>
+                            <div class="game-script-box">
+                                <code class="game-script-code">loadstring(game:HttpGet("https://blessed.fun/scripts/evade/loader.lua"))()</code>
+                                <button class="game-script-copy" data-script='loadstring(game:HttpGet("https://blessed.fun/scripts/evade/loader.lua"))()' title="Copy">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="game-links">
+                                <a href="https://www.roblox.com/games/9872472334/Evade" class="btn btn-roblox" target="_blank">Play on Roblox</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lucky Blocks Battlegrounds -->
+                    <div class="game-card">
+                        <div class="game-screenshots">
+                            <img src="https://thumbnails.roblox.com/v1/games/icons?universeIds=279565647&size=768x432&format=Png&isCircular=false" alt="Lucky Blocks Battlegrounds" class="game-image" onerror="this.onerror=null; this.src='https://cdn.static.pikoya.com/robloxgo/games/279565647/thumbnail_1'">
+                            <img src="https://thumbnails.roblox.com/v1/games/icons?universeIds=279565647&size=768x432&format=Png&isCircular=false" alt="Lucky Blocks Battlegrounds" class="game-image" onerror="this.onerror=null; this.src='https://cdn.static.pikoya.com/robloxgo/games/279565647/thumbnail_2'">
+                        </div>
+                        <div class="game-content">
+                            <h3 class="game-title">Lucky Blocks Battlegrounds</h3>
+                            <p class="game-description">Open mystery lucky blocks and get random powerful gears to battle other players! Each block has different rarities with unique weapons and abilities. Our script provides auto-open, auto-farm, ESP, and all premium combat features.</p>
+                            <div class="game-script-box">
+                                <code class="game-script-code">loadstring(game:HttpGet("https://blessed.fun/scripts/luckyblock/loader.lua"))()</code>
+                                <button class="game-script-copy" data-script='loadstring(game:HttpGet("https://blessed.fun/scripts/luckyblock/loader.lua"))()' title="Copy">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="game-links">
+                                <a href="https://www.roblox.com/games/662417684/LUCKY-BLOCKS-Battlegrounds" class="btn btn-roblox" target="_blank">Play on Roblox</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Executors Section -->
+        <section class="executors" id="executors">
+            <div class="container">
+                <div class="section-tag">Executors</div>
+                <h2 class="section-title">Supported Executors</h2>
+                <p class="section-subtitle">Scripts work with these executors</p>
+                <div class="executors-grid">
+                    <a href="https://volt.bz" target="_blank" class="executor-card">
+                        <div class="executor-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                                <rect x="9" y="9" width="6" height="6"></rect>
+                                <line x1="9" y1="1" x2="9" y2="4"></line>
+                                <line x1="15" y1="1" x2="15" y2="4"></line>
+                                <line x1="9" y1="20" x2="9" y2="23"></line>
+                                <line x1="15" y1="20" x2="15" y2="23"></line>
+                                <line x1="20" y1="9" x2="23" y2="9"></line>
+                                <line x1="20" y1="14" x2="23" y2="14"></line>
+                                <line x1="1" y1="9" x2="4" y2="9"></line>
+                                <line x1="1" y1="14" x2="4" y2="14"></line>
+                            </svg>
+                        </div>
+                        <h3 class="executor-name">Volt</h3>
+                        <p class="executor-platform"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect></svg> PC</p>
+                        <span class="executor-link">Visit Website →</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Showcase Section -->
+        <section class="showcase" id="showcase">
+            <div class="container">
+                <div class="section-tag">Showcase</div>
+                <h2 class="section-title">Blessed Hub Universal</h2>
+                <p class="section-subtitle">ESP, Aimbot & more — all in one powerful script</p>
+                <div class="showcase-wrapper">
+                    <div class="showcase-gameview">
+                        <!-- Map Background -->
+                        <div class="showcase-map">
+                            <div class="showcase-map-grid"></div>
+                            <div class="showcase-map-building showcase-building-1"></div>
+                            <div class="showcase-map-building showcase-building-2"></div>
+                            <div class="showcase-map-building showcase-building-3"></div>
+                            <div class="showcase-map-building showcase-building-4"></div>
+                        </div>
+                        <div class="showcase-backdrop"></div>
+                        <!-- Bullet Origin (gun position) -->
+                        <div class="showcase-bullet-origin" id="showcaseBulletOrigin"></div>
+                        <!-- Bullet Tracers - going to heads -->
+                        <div class="showcase-bullet showcase-bullet-1"></div>
+                        <div class="showcase-bullet showcase-bullet-2"></div>
+                        <div class="showcase-bullet showcase-bullet-3"></div>
+                        <!-- Aimbot FOV Circle -->
+                        <div class="showcase-fov" id="showcaseFov"></div>
+                        <!-- ESP Elements - Character 1 -->
+                        <div class="showcase-esp-box showcase-esp-1" id="showcaseEsp1">
+                            <div class="showcase-character">
+                                <div class="showcase-char-head"></div>
+                                <div class="showcase-char-body"></div>
+                            </div>
+                            <span class="showcase-health-text" id="showcaseHealth1">80 HP</span>
+                            <div class="showcase-healthbar" id="showcaseHealthbar1">
+                                <div class="showcase-health-fill" style="width: 80%"></div>
+                            </div>
+                            <div class="showcase-tracer" id="showcaseTracer1"></div>
+                        </div>
+                        <!-- ESP Elements - Character 2 -->
+                        <div class="showcase-esp-box showcase-esp-2" id="showcaseEsp2">
+                            <div class="showcase-character">
+                                <div class="showcase-char-head"></div>
+                                <div class="showcase-char-body"></div>
+                            </div>
+                            <span class="showcase-health-text" id="showcaseHealth2">45 HP</span>
+                            <div class="showcase-healthbar" id="showcaseHealthbar2">
+                                <div class="showcase-health-fill" style="width: 45%"></div>
+                            </div>
+                            <div class="showcase-tracer" id="showcaseTracer2"></div>
+                        </div>
+                        <!-- ESP Elements - Character 3 -->
+                        <div class="showcase-esp-box showcase-esp-3" id="showcaseEsp3">
+                            <div class="showcase-character">
+                                <div class="showcase-char-head"></div>
+                                <div class="showcase-char-body"></div>
+                            </div>
+                            <span class="showcase-health-text" id="showcaseHealth3">100 HP</span>
+                            <div class="showcase-healthbar" id="showcaseHealthbar3">
+                                <div class="showcase-health-fill" style="width: 100%"></div>
+                            </div>
+                            <div class="showcase-tracer" id="showcaseTracer3"></div>
+                        </div>
+                    </div>
+                    <div class="showcase-ui">
+                        <div class="showcase-ui-header">
+                            <span class="showcase-ui-title">Blessed Hub</span>
+                            <span class="showcase-ui-badge">Universal</span>
+                        </div>
+                        <div class="showcase-ui-content">
+                            <div class="showcase-ui-section">
+                                <span class="showcase-ui-section-title">Combat</span>
+                                <div class="showcase-ui-item">
+                                    <span>Target Part</span>
+                                    <span class="showcase-ui-value">Head</span>
+                                </div>
+                            </div>
+                            <div class="showcase-ui-section">
+                                <span class="showcase-ui-section-title">Visuals</span>
+                                <div class="showcase-ui-item">
+                                    <span>ESP Boxes</span>
+                                    <div class="showcase-ui-toggle showcase-ui-toggle-on" data-toggle="esp" title="ESP kutularını aç/kapat"></div>
+                                </div>
+                                <div class="showcase-ui-item">
+                                    <span>Tracers</span>
+                                    <div class="showcase-ui-toggle showcase-ui-toggle-on" data-toggle="tracers" title="Tracer çizgilerini aç/kapat"></div>
+                                </div>
+                                <div class="showcase-ui-item">
+                                    <span>Health Bar</span>
+                                    <div class="showcase-ui-toggle showcase-ui-toggle-on" data-toggle="healthbar" title="Can barlarını aç/kapat"></div>
+                                </div>
+                                <div class="showcase-ui-item">
+                                    <span>FOV Circle</span>
+                                    <div class="showcase-ui-toggle showcase-ui-toggle-on" data-toggle="fov" title="FOV dairesini aç/kapat"></div>
+                                </div>
+                                <div class="showcase-ui-item">
+                                    <span>Mermi İzleri</span>
+                                    <div class="showcase-ui-toggle showcase-ui-toggle-on" data-toggle="bullets" title="Kafaya giden mermi izlerini aç/kapat"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Developers Section -->
+        <section class="developers" id="developers">
+            <div class="container">
+                <div class="section-tag">Team</div>
+                <h2 class="section-title">Developers</h2>
+                <p class="section-subtitle">Meet the team behind Blessed Hub</p>
+                <div class="developers-grid">
+                    <div class="developer-card">
+                        <h3 class="developer-name">dausita</h3>
+                        <p class="developer-role">Founder & Lead Dev</p>
+                    </div>
+                    <div class="developer-card">
+                        <h3 class="developer-name">beraatwr</h3>
+                        <p class="developer-role">Owner</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-left">
+            <div class="footer-logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <ellipse cx="12" cy="14" rx="8" ry="9" fill="#fbbf24" stroke="#f59e0b" stroke-width="1.5"/>
+                    <ellipse cx="12" cy="13" rx="7" ry="8" fill="#fcd34d"/>
+                    <path d="M8 10 Q12 8 16 10" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                    <path d="M9 7 Q12 5 15 7" stroke="#f59e0b" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.7"/>
+                    <path d="M10 4 Q12 3 14 4" stroke="#f59e0b" stroke-width="0.8" stroke-linecap="round" fill="none" opacity="0.5"/>
+                </svg>
+                <span>blessed.fun</span>
+            </div>
+        </div>
+        <div class="footer-right">
+            <span class="footer-copyright">© 2026 blessed.fun</span>
+            <div class="footer-links">
+                <a href="#" class="footer-link" id="privacyPolicyLink">Privacy Policy</a>
+                <a href="#" class="footer-link" id="termsOfServiceLink">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Privacy Policy Modal -->
+    <div class="modal" id="privacyPolicyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Privacy Policy</h2>
+                <button class="modal-close" id="closePrivacyModal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-updated">Last updated: February 2026</p>
+                <div class="modal-section">
+                    <h3 class="modal-section-title">1. Information We Collect</h3>
+                    <div class="modal-section-content">
+                        <p><strong>Hardware Identifier (HWID):</strong> Our software directly collects your Hardware Identifier (HWID) for licensing and anti-abuse purposes. By using blessed.fun, you consent to this collection.</p>
+                        <p><strong>IP Address:</strong> Our key system providers (Luarmor and Work.Ink) collect IP addresses for secure step tracking and verification. This information is used solely for key validation and is never leaked or sold.</p>
+                        <p><strong>Discord Information:</strong> If you join our Discord server, your Discord username and ID may be associated with your license for support and verification purposes.</p>
+                    </div>
+                </div>
+                <div class="modal-section">
+                    <h3 class="modal-section-title">2. How We Use Your Information</h3>
+                    <div class="modal-section-content">
+                        <p>We use the collected information solely for:</p>
+                        <ul>
+                            <li>License verification and validation</li>
+                            <li>Preventing abuse and unauthorized access</li>
+                            <li>Providing customer support</li>
+                            <li>Improving our services</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-section">
+                    <h3 class="modal-section-title">3. Data Security</h3>
+                    <div class="modal-section-content">
+                        <p>We implement industry-standard security measures to protect your information. However, no method of transmission over the internet is 100% secure, and we cannot guarantee absolute security.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-modal-close" id="closePrivacyModalBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms of Service Modal -->
+    <div class="modal" id="termsOfServiceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Terms of Service</h2>
+                <button class="modal-close" id="closeTermsModal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-updated">Last updated: February 2026</p>
+                <div class="modal-section">
+                    <h3 class="modal-section-title">1. Acceptance of Terms</h3>
+                    <div class="modal-section-content">
+                        <p>By downloading or using blessed.fun, you agree to be bound by these Terms of Service. If you do not agree, do not use our software.</p>
+                    </div>
+                </div>
+                <div class="modal-section">
+                    <h3 class="modal-section-title">2. HWID Collection</h3>
+                    <div class="modal-section-content">
+                        <p>By using our products, you consent to the collection of your Hardware Identifier (HWID). This is required for license verification and abuse prevention.</p>
+                    </div>
+                </div>
+                <div class="modal-section">
+                    <h3 class="modal-section-title">3. Roblox Account Disclaimer</h3>
+                    <div class="modal-section-content">
+                        <p>We are not liable for any issues, bans, suspensions, or other problems that may occur with your Roblox account(s) as a result of using blessed.fun. You use our software at your own risk.</p>
+                    </div>
+                </div>
+                <div class="modal-section">
+                    <h3 class="modal-section-title">4. Prohibited Uses</h3>
+                    <div class="modal-section-content">
+                        <p>You agree not to:</p>
+                        <ul>
+                            <li>Use our software for any illegal purposes</li>
+                            <li>Attempt to reverse engineer or modify our software</li>
+                            <li>Share or distribute your license key</li>
+                            <li>Use our software to harm or exploit others</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-section">
+                    <h3 class="modal-section-title">5. Limitation of Liability</h3>
+                    <div class="modal-section-content">
+                        <p>blessed.fun is provided "as is" without warranties of any kind. We shall not be liable for any damages arising from the use or inability to use our software.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-modal-close" id="closeTermsModalBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <nav class="mobile-nav">
+            <a href="#features" class="mobile-nav-link">Features</a>
+            <a href="#games" class="mobile-nav-link">Games</a>
+            <a href="#executors" class="mobile-nav-link">Executors</a>
+            <a href="#showcase" class="mobile-nav-link">Showcase</a>
+            <a href="#developers" class="mobile-nav-link">Developers</a>
+            <a href="https://discord.gg/BGJ5wsAQXy" target="_blank" class="mobile-nav-link">Discord</a>
+        </nav>
+    </div>
+
+    <script src="effects.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
