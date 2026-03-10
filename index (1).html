@@ -1,0 +1,3321 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blessed Hub - The Ultimate Free Scripting Utility</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-primary: #000000;
+    --bg-secondary: #0a0a0a;
+    --bg-card: #1a1a1a;
+    --accent-red: #ff4444;
+    --accent-orange: #ff6b35;
+    --accent-green: #4ade80;
+    --text-primary: #ffffff;
+    --text-secondary: #a1a1aa;
+    --card-bg: rgba(26, 26, 26, 0.9);
+    --glow-red: rgba(255, 68, 68, 0.4);
+    --glow-green: rgba(74, 222, 128, 0.4);
+    --border-color: rgba(255, 255, 255, 0.1);
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Background Grid Pattern */
+.background-grid {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.3;
+    z-index: 0;
+    transform: perspective(1000px) rotateX(60deg);
+    transform-origin: center center;
+    animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+    0% {
+        transform: perspective(1000px) rotateX(60deg) translateY(0);
+    }
+    100% {
+        transform: perspective(1000px) rotateX(60deg) translateY(50px);
+    }
+}
+
+/* Light Rays Effect */
+.light-rays {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(ellipse at bottom, rgba(255, 68, 68, 0.1) 0%, transparent 70%);
+    z-index: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+.background-grid.hidden {
+    opacity: 0 !important;
+}
+
+/* Background Image Overlay */
+.bg-image-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: url('https://images.unsplash.com/photo-1557683316-973673baf926?w=1920') center/cover no-repeat;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+.bg-image-overlay.active {
+    opacity: 0.15;
+}
+
+/* Snow Effect */
+.snow-container {
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.snow-container.active {
+    opacity: 1;
+}
+
+.snowflake {
+    position: absolute;
+    top: -20px;
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    animation: snowfall linear infinite;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+}
+
+@keyframes snowfall {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(100vh) rotate(360deg); }
+}
+
+/* Rain Effect */
+.rain-container {
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.rain-container.active {
+    opacity: 1;
+}
+
+.raindrop {
+    position: absolute;
+    top: -20px;
+    width: 2px;
+    height: 40px;
+    background: linear-gradient(to bottom, transparent, rgba(174, 194, 224, 0.5));
+    animation: rainfall linear infinite;
+}
+
+@keyframes rainfall {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(100vh); }
+}
+
+/* Theme Settings Button */
+.theme-settings-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 150;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.theme-settings-btn:hover {
+    background: var(--accent-red);
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px var(--glow-red);
+}
+
+/* Theme Panel */
+.theme-panel {
+    position: fixed;
+    top: 0;
+    right: -350px;
+    width: 320px;
+    height: 100vh;
+    background: var(--card-bg);
+    border-left: 1px solid var(--border-color);
+    z-index: 200;
+    padding: 1.5rem;
+    transition: right 0.4s ease;
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
+}
+
+.theme-panel.active {
+    right: 0;
+}
+
+.theme-panel-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 199;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s, visibility 0.4s;
+}
+
+.theme-panel-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.theme-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.theme-panel-header h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.theme-panel-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.theme-panel-close:hover {
+    color: var(--accent-red);
+}
+
+.theme-section {
+    margin-bottom: 1.5rem;
+}
+
+.theme-section-title {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent-red);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+}
+
+.theme-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.theme-toggle {
+    width: 44px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.theme-toggle::after {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    background: var(--text-secondary);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle.theme-toggle-on {
+    background: var(--accent-red);
+}
+
+.theme-toggle.theme-toggle-on::after {
+    left: calc(100% - 21px);
+    background: white;
+}
+
+.theme-options {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.theme-option {
+    width: 44px;
+    height: 44px;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+    background: rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.theme-option:hover {
+    border-color: var(--accent-red);
+    transform: scale(1.05);
+}
+
+.theme-option.active {
+    border-color: var(--accent-red);
+    box-shadow: 0 0 15px var(--glow-red);
+}
+
+/* Theme Color Variants */
+body[data-theme="blue"] {
+    --accent-red: #3b82f6;
+    --accent-orange: #60a5fa;
+    --glow-red: rgba(59, 130, 246, 0.4);
+}
+body[data-theme="blue"] .light-rays {
+    background: radial-gradient(ellipse at bottom, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+}
+
+body[data-theme="purple"] {
+    --accent-red: #a78bfa;
+    --accent-orange: #c4b5fd;
+    --glow-red: rgba(167, 139, 250, 0.4);
+}
+body[data-theme="purple"] .light-rays {
+    background: radial-gradient(ellipse at bottom, rgba(167, 139, 250, 0.15) 0%, transparent 70%);
+}
+
+body[data-theme="green"] {
+    --accent-red: #4ade80;
+    --accent-orange: #86efac;
+    --glow-red: rgba(74, 222, 128, 0.4);
+}
+body[data-theme="green"] .light-rays {
+    background: radial-gradient(ellipse at bottom, rgba(74, 222, 128, 0.15) 0%, transparent 70%);
+}
+
+body[data-theme="red"] {
+    --accent-red: #ef4444;
+    --accent-orange: #f87171;
+    --glow-red: rgba(239, 68, 68, 0.5);
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* Header */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem 0;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Logo */
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 0.05em;
+}
+
+/* Navigation Links */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-link {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+.nav-link:hover {
+    color: var(--accent-red);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent-red);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* API Status */
+.api-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-left: 1.5rem;
+    border-left: 1px solid var(--border-color);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-green);
+    box-shadow: 0 0 10px var(--glow-green);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.status-dot-development {
+    background: #fbbf24;
+    box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.status-text {
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Hamburger Menu */
+.hamburger-menu {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 101;
+}
+
+.hamburger-menu span {
+    width: 25px;
+    height: 2px;
+    background: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.hamburger-menu.active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+}
+
+.hamburger-menu.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-menu.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.btn-get-key {
+    background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-orange) 100%);
+    color: var(--text-primary);
+    box-shadow: 0 0 25px var(--glow-red), 0 4px 6px rgba(0, 0, 0, 0.3);
+    padding: 1rem 2.5rem;
+    font-size: 1rem;
+}
+
+.btn-get-key:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 35px var(--glow-red), 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.btn svg {
+    flex-shrink: 0;
+}
+
+/* Main Content */
+.main {
+    position: relative;
+    z-index: 1;
+    padding-top: 100px;
+}
+
+/* Hero Section */
+.hero {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6rem 0 4rem;
+}
+
+.hero .btn-get-key {
+    margin-bottom: 3rem;
+    animation: fadeInUp 0.8s ease;
+}
+
+.hero-title {
+    font-size: clamp(4rem, 10vw, 8rem);
+    font-weight: 800;
+    margin-bottom: 2rem;
+    letter-spacing: -0.02em;
+    animation: fadeInUp 0.8s ease 0.2s both;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.title-main {
+    color: var(--text-primary);
+}
+
+.title-accent {
+    color: var(--accent-red);
+    background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-orange) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-subtitle {
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    color: var(--text-secondary);
+    font-weight: 300;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+    animation: fadeInUp 0.8s ease 0.4s both;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Statistics Section */
+.statistics {
+    padding: 4rem 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.stat-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.stat-card-red {
+    border-color: rgba(255, 68, 68, 0.3);
+}
+
+.stat-card-red:hover {
+    border-color: var(--accent-red);
+    box-shadow: 0 10px 30px var(--glow-red);
+}
+
+.stat-card-green {
+    border-color: rgba(74, 222, 128, 0.3);
+}
+
+.stat-card-green:hover {
+    border-color: var(--accent-green);
+    box-shadow: 0 10px 30px var(--glow-green);
+}
+
+.stat-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.stat-card-red .stat-icon {
+    background: rgba(255, 68, 68, 0.1);
+    color: var(--accent-red);
+    border: 1px solid rgba(255, 68, 68, 0.3);
+}
+
+.stat-card-green .stat-icon {
+    background: rgba(74, 222, 128, 0.1);
+    color: var(--accent-green);
+    border: 1px solid rgba(74, 222, 128, 0.3);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.stat-value {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+}
+
+.stat-value-red {
+    color: var(--accent-red);
+}
+
+.stat-value-green {
+    color: var(--accent-green);
+}
+
+.stat-subtext {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* Code Section */
+.code-section {
+    padding: 4rem 0;
+}
+
+.code-box {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.code-box:hover {
+    border-color: rgba(255, 68, 68, 0.3);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.code-box.maximized {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 1200px;
+    z-index: 1000;
+    max-height: 80vh;
+}
+
+.code-box.maximized .code-content {
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.code-content {
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    flex: 1;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.code-keyword {
+    color: var(--accent-red);
+}
+
+.code-function {
+    color: #a78bfa;
+}
+
+.code-string {
+    color: var(--accent-green);
+}
+
+.code-property {
+    color: #60a5fa;
+}
+
+.code-operator {
+    color: var(--text-secondary);
+}
+
+.code-punctuation {
+    color: var(--text-secondary);
+}
+
+.code-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.code-action-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.code-action-btn:hover {
+    color: var(--text-primary);
+    border-color: var(--accent-red);
+    background: rgba(255, 68, 68, 0.1);
+}
+
+/* Features Section */
+.features {
+    padding: 6rem 0;
+    text-align: center;
+}
+
+.features-tag {
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    border: 1px solid var(--accent-red);
+    border-radius: 2rem;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    background: rgba(255, 68, 68, 0.1);
+}
+
+.features-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+}
+
+.features-subtitle {
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    color: var(--text-secondary);
+    margin-bottom: 4rem;
+    font-weight: 300;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+/* Feature Cards */
+.feature-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 2.5rem 2rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-red);
+    box-shadow: 0 10px 30px var(--glow-red);
+}
+
+.feature-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 68, 68, 0.1);
+    border-radius: 50%;
+    color: var(--accent-red);
+    border: 1px solid rgba(255, 68, 68, 0.3);
+}
+
+.feature-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+}
+
+.feature-description {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Mobile Menu */
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.98);
+    backdrop-filter: blur(20px);
+    z-index: 99;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.mobile-menu.active {
+    display: flex;
+    opacity: 1;
+    visibility: visible;
+}
+
+.mobile-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    text-align: center;
+}
+
+.mobile-nav-link {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.mobile-nav-link:hover {
+    color: var(--accent-red);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hamburger-menu {
+        display: flex;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .code-box {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .code-actions {
+        justify-content: flex-end;
+        margin-top: 1rem;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .developers-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .games-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .executors-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .game-screenshots {
+        grid-template-columns: 1fr;
+    }
+
+    .comparison-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .game-links {
+        flex-direction: column;
+    }
+
+    .btn-script,
+    .btn-roblox {
+        width: 100%;
+    }
+
+    .theme-panel {
+        width: 100%;
+        right: -100%;
+    }
+
+    .theme-settings-btn {
+        bottom: 5rem;
+    }
+
+    .footer-left {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        margin-bottom: 1rem;
+        padding: 0 1.5rem;
+    }
+
+    .footer-right {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 0 1.5rem;
+    }
+
+    .modal-content {
+        max-height: 90vh;
+        margin: 1rem;
+    }
+
+    .showcase-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .showcase-ui {
+        order: 1;
+    }
+
+    .showcase-gameview {
+        order: 2;
+    }
+
+    .container {
+        padding: 0 1.5rem;
+    }
+
+    .hero {
+        min-height: 70vh;
+        padding: 4rem 0 2rem;
+    }
+
+    .hero-title {
+        flex-direction: column;
+        gap: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 3.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .features-title {
+        font-size: 2rem;
+    }
+}
+
+/* Developers Section */
+.developers {
+    padding: 6rem 0;
+    text-align: center;
+}
+
+.section-tag {
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    border: 1px solid var(--accent-red);
+    border-radius: 2rem;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    background: rgba(255, 68, 68, 0.1);
+}
+
+.section-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+}
+
+.section-subtitle {
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    color: var(--text-secondary);
+    margin-bottom: 4rem;
+    font-weight: 300;
+}
+
+.developers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.developer-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 2.5rem 2rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.developer-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-red);
+    box-shadow: 0 10px 30px var(--glow-red);
+}
+
+.developer-name {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.developer-role {
+    color: var(--accent-red);
+    font-size: 1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Games Section */
+.games {
+    padding: 6rem 0;
+    text-align: center;
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2.5rem;
+    margin-top: 3rem;
+}
+
+.game-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-red);
+    box-shadow: 0 10px 30px var(--glow-red);
+}
+
+.game-screenshots {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.game-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s ease;
+}
+
+.game-image:hover {
+    transform: scale(1.05);
+}
+
+.game-content {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+}
+
+.game-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.game-description {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    flex: 1;
+}
+
+.game-script-box {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+}
+
+.game-script-code {
+    flex: 1;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: var(--accent-green);
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.game-script-copy {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 0.4rem;
+    padding: 0.5rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.game-script-copy:hover {
+    color: var(--accent-green);
+    border-color: var(--accent-green);
+    background: rgba(74, 222, 128, 0.1);
+}
+
+.game-script-copy.copied {
+    color: var(--accent-green);
+    border-color: var(--accent-green);
+}
+
+.game-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn-script {
+    background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-orange) 100%);
+    color: var(--text-primary);
+    box-shadow: 0 0 20px var(--glow-red), 0 4px 6px rgba(0, 0, 0, 0.3);
+    flex: 1;
+    min-width: 140px;
+    justify-content: center;
+}
+
+.btn-script:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px var(--glow-red), 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.btn-roblox {
+    background: transparent;
+    border: 1px solid var(--accent-red);
+    color: var(--accent-red);
+    flex: 1;
+    min-width: 140px;
+    justify-content: center;
+}
+
+.btn-roblox:hover {
+    background: rgba(255, 68, 68, 0.1);
+    border-color: var(--accent-red);
+    color: var(--text-primary);
+}
+
+/* Executors Section */
+.executors {
+    padding: 6rem 0;
+    text-align: center;
+}
+
+.executors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.executor-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.executor-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-red);
+    box-shadow: 0 10px 30px var(--glow-red);
+}
+
+.executor-icon {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 68, 68, 0.1);
+    border-radius: 1rem;
+    color: var(--accent-red);
+    margin-bottom: 1rem;
+    border: 1px solid rgba(255, 68, 68, 0.3);
+}
+
+.executor-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.executor-platform {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.executor-platform svg {
+    color: var(--text-secondary);
+}
+
+.executor-link {
+    font-size: 0.9rem;
+    color: var(--accent-red);
+    font-weight: 500;
+}
+
+.executor-card:hover .executor-link {
+    text-decoration: underline;
+}
+
+/* Comparison Section */
+.comparison {
+    padding: 6rem 0;
+    text-align: center;
+}
+
+.comparison-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.comparison-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    text-align: left;
+}
+
+.comparison-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.comparison-card-ours {
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.comparison-card-ours:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+}
+
+.comparison-card-others {
+    border-color: rgba(255, 68, 68, 0.3);
+}
+
+.comparison-card-others:hover {
+    border-color: var(--accent-red);
+    box-shadow: 0 10px 30px var(--glow-red);
+}
+
+.comparison-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.comparison-header svg {
+    color: var(--text-secondary);
+}
+
+.comparison-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.comparison-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.comparison-item-check {
+    color: #3b82f6;
+}
+
+.comparison-item-check svg {
+    color: #3b82f6;
+    flex-shrink: 0;
+}
+
+.comparison-item-cross {
+    color: var(--accent-red);
+}
+
+.comparison-item-cross svg {
+    color: var(--accent-red);
+    flex-shrink: 0;
+}
+
+.comparison-item span {
+    flex: 1;
+}
+
+/* Showcase Section */
+.showcase {
+    padding: 6rem 0;
+    text-align: center;
+}
+
+.showcase-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 2rem;
+    margin-top: 3rem;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.showcase-gameview {
+    position: relative;
+    aspect-ratio: 16/9;
+    background: linear-gradient(180deg, #1a2a3a 0%, #0d1520 50%, #152535 100%);
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+/* Map Background */
+.showcase-map {
+    position: absolute;
+    inset: 0;
+}
+
+.showcase-map-grid {
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 30px 30px;
+}
+
+.showcase-map-building {
+    position: absolute;
+    background: rgba(40, 50, 65, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.showcase-building-1 {
+    width: 15%;
+    height: 35%;
+    bottom: 5%;
+    left: 5%;
+}
+
+.showcase-building-2 {
+    width: 12%;
+    height: 45%;
+    bottom: 5%;
+    right: 15%;
+}
+
+.showcase-building-3 {
+    width: 10%;
+    height: 25%;
+    bottom: 5%;
+    right: 35%;
+}
+
+.showcase-building-4 {
+    width: 18%;
+    height: 30%;
+    bottom: 5%;
+    left: 30%;
+}
+
+.showcase-backdrop {
+    position: absolute;
+    inset: 0;
+    background: 
+        radial-gradient(ellipse at 30% 70%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 30%, rgba(255, 68, 68, 0.06) 0%, transparent 50%);
+}
+
+/* Bullet Origin (gun position - bottom center) */
+.showcase-bullet-origin {
+    position: absolute;
+    bottom: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 8px;
+    background: var(--accent-orange);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--accent-orange);
+}
+
+/* Bullet tracers - lines from gun to character heads (aimbot) */
+.showcase-bullet {
+    position: absolute;
+    bottom: 15%;
+    left: 50%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-orange), var(--accent-red));
+    transform-origin: left center;
+    box-shadow: 0 0 8px var(--accent-red);
+    transition: opacity 0.3s ease;
+}
+
+.showcase-bullet-1 {
+    width: 32%;
+    transform: translateY(-50%) rotate(-28deg);
+}
+
+.showcase-bullet-2 {
+    width: 26%;
+    transform: translateY(-50%) rotate(22deg);
+}
+
+.showcase-bullet-3 {
+    width: 20%;
+    transform: translateY(-50%) rotate(-5deg);
+}
+
+.showcase-bullet.showcase-hidden,
+.showcase-bullet-origin.showcase-hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Character inside ESP box */
+.showcase-character {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.showcase-char-head {
+    width: 22px;
+    height: 22px;
+    background: #8b7355;
+    border-radius: 50%;
+    margin-bottom: -2px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.showcase-char-body {
+    width: 30px;
+    height: 55px;
+    background: #5c6b7a;
+    border-radius: 4px 4px 0 0;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* FOV Circle */
+.showcase-fov {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    border: 2px solid rgba(255, 68, 68, 0.6);
+    border-radius: 50%;
+    background: transparent;
+}
+
+/* Toggle hidden state */
+.showcase-esp-box.showcase-hidden {
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
+.showcase-esp-box.showcase-hidden .showcase-character {
+    opacity: 1;
+}
+
+.showcase-tracer.showcase-hidden,
+.showcase-healthbar.showcase-hidden,
+.showcase-health-text.showcase-hidden,
+.showcase-fov.showcase-hidden {
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+/* ESP Boxes - Character silhouettes with boxes */
+.showcase-esp-box {
+    position: absolute;
+    border: 2px solid var(--accent-red);
+    background: transparent;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.showcase-esp-1 {
+    width: 70px;
+    height: 120px;
+    top: 35%;
+    left: 20%;
+}
+
+.showcase-esp-2 {
+    width: 65px;
+    height: 110px;
+    top: 45%;
+    right: 25%;
+}
+
+.showcase-esp-3 {
+    width: 60px;
+    height: 100px;
+    top: 60%;
+    left: 40%;
+}
+
+.showcase-esp-1 .showcase-healthbar { width: 65px; }
+.showcase-esp-2 .showcase-healthbar { width: 60px; }
+.showcase-esp-3 .showcase-healthbar { width: 55px; }
+
+/* Tracers - lines from bottom center to characters */
+.showcase-tracer {
+    position: absolute;
+    bottom: -50%;
+    left: 50%;
+    width: 2px;
+    height: 150px;
+    background: linear-gradient(to top, var(--accent-red), transparent);
+    transform-origin: bottom center;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.showcase-esp-1 .showcase-tracer {
+    transform: translateX(-50%) rotate(-15deg);
+}
+
+.showcase-esp-2 .showcase-tracer {
+    transform: translateX(-50%) rotate(12deg);
+}
+
+.showcase-esp-3 .showcase-tracer {
+    transform: translateX(-50%) rotate(-5deg);
+}
+
+/* Health Bars */
+.showcase-healthbar {
+    position: absolute;
+    top: -26px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 8px;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid var(--accent-red);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.showcase-health-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-red), var(--accent-orange));
+    border-radius: 1px;
+    transition: width 0.3s ease;
+}
+
+.showcase-health-text {
+    position: absolute;
+    top: -36px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    color: var(--accent-red);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Showcase UI Panel */
+.showcase-ui {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+}
+
+.showcase-ui-header {
+    padding: 1rem 1.25rem;
+    background: rgba(255, 68, 68, 0.1);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.showcase-ui-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.showcase-ui-badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+    background: var(--accent-red);
+    color: white;
+    border-radius: 0.25rem;
+    font-weight: 600;
+}
+
+.showcase-ui-content {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.showcase-ui-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.showcase-ui-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent-red);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+}
+
+.showcase-ui-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 0.4rem;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.showcase-ui-value {
+    font-size: 0.85rem;
+    color: var(--accent-orange);
+    font-weight: 500;
+}
+
+.showcase-ui-toggle {
+    width: 36px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    position: relative;
+    border: 1px solid var(--border-color);
+}
+
+.showcase-ui-toggle-on {
+    background: var(--accent-red);
+}
+
+.showcase-ui-toggle-on::after {
+    content: '';
+    position: absolute;
+    right: 3px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    background: white;
+    border-radius: 50%;
+}
+
+.showcase-ui-toggle-off::after {
+    left: 3px;
+    right: auto;
+}
+
+.showcase-ui-toggle-off {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.showcase-ui-toggle {
+    cursor: pointer;
+}
+
+/* Footer */
+.footer {
+    position: relative;
+    padding: 2rem 0;
+    border-top: 1px solid var(--border-color);
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    z-index: 10;
+    margin-top: 4rem;
+}
+
+.footer-left {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    z-index: 100;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.footer-logo svg {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.footer-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    justify-content: flex-end;
+    padding: 0 2rem;
+    flex-wrap: wrap;
+}
+
+.footer-copyright {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.footer-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.footer-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+    color: var(--accent-red);
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.active {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    max-width: 600px;
+    width: 100%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.modal.active .modal-content {
+    transform: scale(1);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-orange);
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease;
+}
+
+.modal-close:hover {
+    color: var(--accent-red);
+}
+
+.modal-body {
+    padding: 2rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: var(--accent-red);
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-orange);
+}
+
+.modal-updated {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.modal-section {
+    margin-bottom: 2rem;
+}
+
+.modal-section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+}
+
+.modal-section-content {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.modal-section-content p {
+    margin-bottom: 1rem;
+}
+
+.modal-section-content ul {
+    margin-left: 1.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.modal-section-content li {
+    margin-bottom: 0.5rem;
+}
+
+.modal-section-content strong {
+    color: var(--text-primary);
+}
+
+.modal-footer {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-modal-close {
+    background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-orange) 100%);
+    color: var(--text-primary);
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px var(--glow-red);
+}
+
+.btn-modal-close:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px var(--glow-red);
+}
+
+/* Smooth Scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="background-grid"></div>
+    <div class="light-rays"></div>
+    <div class="bg-image-overlay" id="bgImageOverlay"></div>
+    <div class="snow-container" id="snowContainer"></div>
+    <div class="rain-container" id="rainContainer"></div>
+
+    <!-- Theme Toggle Button -->
+    <button type="button" class="theme-settings-btn" id="themeSettingsBtn" title="Tema Ayarları">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+    </button>
+
+    <!-- Theme Panel Overlay -->
+    <div class="theme-panel-overlay" id="themePanelOverlay"></div>
+
+    <!-- Theme Settings Panel -->
+    <div class="theme-panel" id="themePanel">
+        <div class="theme-panel-header">
+            <h3>Tema & Efektler</h3>
+            <button class="theme-panel-close" id="themePanelClose">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="theme-panel-content">
+            <div class="theme-section">
+                <span class="theme-section-title">Hava Efektleri</span>
+                <div class="theme-item">
+                    <span>Kar Yağışı</span>
+                    <div class="theme-toggle" data-effect="snow" id="toggleSnow"></div>
+                </div>
+                <div class="theme-item">
+                    <span>Yağmur</span>
+                    <div class="theme-toggle" data-effect="rain" id="toggleRain"></div>
+                </div>
+            </div>
+            <div class="theme-section">
+                <span class="theme-section-title">Arka Plan</span>
+                <div class="theme-item">
+                    <span>Arka Plan Görseli</span>
+                    <div class="theme-toggle" data-effect="bgImage" id="toggleBgImage"></div>
+                </div>
+                <div class="theme-item">
+                    <span>Particle Efekti</span>
+                    <div class="theme-toggle theme-toggle-on" data-effect="particles" id="toggleParticles"></div>
+                </div>
+            </div>
+            <div class="theme-section">
+                <span class="theme-section-title">Tema</span>
+                <div class="theme-options">
+                    <button class="theme-option active" data-theme="dark" title="Koyu">🌙</button>
+                    <button class="theme-option" data-theme="blue" title="Mavi">💙</button>
+                    <button class="theme-option" data-theme="purple" title="Mor">💜</button>
+                    <button class="theme-option" data-theme="green" title="Yeşil">💚</button>
+                    <button class="theme-option" data-theme="red" title="Kırmızı">❤️</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header/Navigation -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">Blessed Hub</div>
+            <button class="hamburger-menu" id="hamburgerMenu" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <nav class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#games" class="nav-link">Games</a>
+                <a href="#executors" class="nav-link">Executors</a>
+                <a href="#showcase" class="nav-link">Showcase</a>
+                <a href="#developers" class="nav-link">Developers</a>
+                <a href="https://discord.gg/BGJ5wsAQXy" target="_blank" class="nav-link">Discord</a>
+                <div class="api-status">
+                    <span class="status-dot status-dot-development"></span>
+                    <span class="status-text">In Development</span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="main">
+        <section class="hero">
+            <div class="container">
+                <a href="#get-key" class="btn btn-get-key">GET KEY</a>
+                <h1 class="hero-title">
+                    <span class="title-main">Blessed</span>
+                    <span class="title-accent">Hub</span>
+                </h1>
+                <p class="hero-subtitle">Welcome to Blessed Hub! Blessed Hub is a completely unique, free, and optimized script designed for the best experience.</p>
+            </div>
+        </section>
+
+        <!-- Statistics Section -->
+        <section class="statistics">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-card stat-card-red">
+                        <div class="stat-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                            </svg>
+                        </div>
+                        <div class="stat-label">TOTAL EXECUTIONS</div>
+                        <div class="stat-value stat-value-red" id="totalExecutions">...</div>
+                        <div class="stat-subtext">All time</div>
+                    </div>
+                    <div class="stat-card stat-card-green">
+                        <div class="stat-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        <div class="stat-label">DAILY EXECUTIONS</div>
+                        <div class="stat-value stat-value-green" id="dailyExecutions">...</div>
+                        <div class="stat-subtext">Today</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Code Snippet Section -->
+        <section class="code-section">
+            <div class="container">
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-keyword">loadstring</span>
+                        <span class="code-punctuation">(</span>
+                        <span class="code-function">game</span>
+                        <span class="code-punctuation">:</span>
+                        <span class="code-function">HttpGet</span>
+                        <span class="code-punctuation">(</span>
+                        <span class="code-string">"https://raw.githubusercontent.com/beraatwr/loader/refs/heads/main/loader.lua"</span>
+                        <span class="code-punctuation">)</span>
+                        <span class="code-punctuation">)()</span>
+                    </div>
+                    <div class="code-actions">
+                        <button class="code-action-btn" id="copyCode" title="Copy">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </button>
+                        <button class="code-action-btn" id="maximizeCode" title="Maximize">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Section -->
+        <section class="comparison" id="comparison">
+            <div class="container">
+                <div class="section-tag">COMPARISON</div>
+                <h2 class="section-title">Why we're the best</h2>
+                <p class="section-subtitle">The ultimate scripting tool, without the downsides.</p>
+                <div class="comparison-grid">
+                    <div class="comparison-card comparison-card-ours">
+                        <div class="comparison-header">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="3" y1="6" x2="21" y2="6"></line>
+                                <line x1="3" y1="12" x2="21" y2="12"></line>
+                                <line x1="3" y1="18" x2="21" y2="18"></line>
+                            </svg>
+                        </div>
+                        <ul class="comparison-list">
+                            <li class="comparison-item comparison-item-check">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>Free</span>
+                            </li>
+                            <li class="comparison-item comparison-item-check">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>Quick support</span>
+                            </li>
+                            <li class="comparison-item comparison-item-check">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>Easy to Use</span>
+                            </li>
+                            <li class="comparison-item comparison-item-check">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>Supports 99.99% of Executors</span>
+                            </li>
+                            <li class="comparison-item comparison-item-check">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>Instant Updates</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="comparison-card comparison-card-others">
+                        <div class="comparison-header">
+                            <span>Others</span>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <ul class="comparison-list">
+                            <li class="comparison-item comparison-item-cross">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                                <span>Paid</span>
+                            </li>
+                            <li class="comparison-item comparison-item-cross">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                                <span>Bad, slow support</span>
+                            </li>
+                            <li class="comparison-item comparison-item-cross">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                                <span>Complicated install process</span>
+                            </li>
+                            <li class="comparison-item comparison-item-cross">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                                <span>Doesn't support most executors</span>
+                            </li>
+                            <li class="comparison-item comparison-item-cross">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                                <span>Slow Updates</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <div class="container">
+                <div class="features-tag">Features</div>
+                <h2 class="features-title">Why Use Blessed Hub?</h2>
+                <p class="features-subtitle">Every reason to choose Blessed Hub, none to doubt it.</p>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"></line>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">100% Free</h3>
+                        <p class="feature-description">Completely free to use with no hidden costs or premium features.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Always Improving</h3>
+                        <p class="feature-description">Continuous development and enhancements based on user feedback.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 4 23 10 17 10"></polyline>
+                                <polyline points="1 20 1 14 7 14"></polyline>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Fast Updates</h3>
+                        <p class="feature-description">Regular updates with new features and bug fixes delivered quickly.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Games Section -->
+        <section class="games" id="games">
+            <div class="container">
+                <div class="section-tag">Games</div>
+                <h2 class="section-title">Supported Games</h2>
+                <p class="section-subtitle">Premium scripts for the best Roblox games</p>
+                <div class="games-grid">
+                    <!-- Jailbreak -->
+                    <div class="game-card">
+                        <div class="game-screenshots">
+                            <img src="https://thumbnails.roblox.com/v1/games/icons?universeIds=606849621&size=768x432&format=Png&isCircular=false" alt="Jailbreak" class="game-image" onerror="this.onerror=null; this.src='https://cdn.static.pikoya.com/robloxgo/games/606849621/thumbnail_1'">
+                            <img src="https://thumbnails.roblox.com/v1/games/icons?universeIds=606849621&size=768x432&format=Png&isCircular=false" alt="Jailbreak" class="game-image" onerror="this.onerror=null; this.src='https://cdn.static.pikoya.com/robloxgo/games/606849621/thumbnail_2'">
+                        </div>
+                        <div class="game-content">
+                            <h3 class="game-title">Jailbreak</h3>
+                            <p class="game-description">Experience the ultimate cops and robbers game! Rob banks, escape prison, and become the most wanted criminal or join the police force to stop them. With our premium script, unlock all vehicles, weapons, and features instantly.</p>
+                            <div class="game-script-box">
+                                <code class="game-script-code">loadstring(game:HttpGet("https://blessed.fun/scripts/jailbreak/loader.lua"))()</code>
+                                <button class="game-script-copy" data-script='loadstring(game:HttpGet("https://blessed.fun/scripts/jailbreak/loader.lua"))()' title="Copy">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="game-links">
+                                <a href="https://www.roblox.com/games/606849621/Jailbreak" class="btn btn-roblox" target="_blank">Play on Roblox</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- The Strongest Battlegrounds -->
+                    <div class="game-card">
+                        <div class="game-screenshots">
+                            <img src="https://thumbnails.roblox.com/v1/games/icons?universeIds=10449761463&size=768x432&format=Png&isCircular=false" alt="The Strongest Battlegrounds" class="game-image" onerror="this.onerror=null; this.src='https://cdn.static.pikoya.com/robloxgo/games/10449761463/thumbnail_1'">
+                            <img src="https://cdn.static.pikoya.com/robloxgo/games/10449761463/thumbnail_2" alt="The Strongest Battlegrounds" class="game-image" onerror="this.onerror=null; this.src='https://cdn.static.pikoya.com/robloxgo/games/10449761463/thumbnail_3'">
+                        </div>
+                        <div class="game-content">
+                            <h3 class="game-title">The Strongest Battlegrounds</h3>
+                            <p class="game-description">Master the art of combat in this intense fighting game! Train your character, unlock powerful abilities, and dominate the battlegrounds. Our script provides auto-farm, auto-train, and all premium features.</p>
+                            <div class="game-script-box">
+                                <code class="game-script-code">loadstring(game:HttpGet("https://blessed.fun/scripts/tsb/loader.lua"))()</code>
+                                <button class="game-script-copy" data-script='loadstring(game:HttpGet("https://blessed.fun/scripts/tsb/loader.lua"))()' title="Copy">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="game-links">
+                                <a href="https://www.roblox.com/games/10449761463/The-Strongest-Battlegrounds" class="btn btn-roblox" target="_blank">Play on Roblox</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Evade -->
+                    <div class="game-card">
+                        <div class="game-screenshots">
+                            <img src="https://thumbnails.roblox.com/v1/games/icons?universeIds=9872472334&size=768x432&format=Png&isCircular=false" alt="Evade" class="game-image" onerror="this.onerror=null; this.src='https://cdn.static.pikoya.com/robloxgo/games/9872472334/thumbnail_1'">
+                            <img src="https://thumbnails.roblox.com/v1/games/icons?universeIds=9872472334&size=768x432&format=Png&isCircular=false" alt="Evade" class="game-image" onerror="this.onerror=null; this.src='https://cdn.static.pikoya.com/robloxgo/games/9872472334/thumbnail_2'">
+                        </div>
+                        <div class="game-content">
+                            <h3 class="game-title">Evade</h3>
+                            <p class="game-description">Survive the chase in this thrilling horror game! Run from the monster, solve puzzles, and escape with your friends. Our script includes ESP, auto-solve, speed boost, and more survival tools.</p>
+                            <div class="game-script-box">
+                                <code class="game-script-code">loadstring(game:HttpGet("https://blessed.fun/scripts/evade/loader.lua"))()</code>
+                                <button class="game-script-copy" data-script='loadstring(game:HttpGet("https://blessed.fun/scripts/evade/loader.lua"))()' title="Copy">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="game-links">
+                                <a href="https://www.roblox.com/games/9872472334/Evade" class="btn btn-roblox" target="_blank">Play on Roblox</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lucky Blocks Battlegrounds -->
+                    <div class="game-card">
+                        <div class="game-screenshots">
+                            <img src="https://thumbnails.roblox.com/v1/games/icons?universeIds=279565647&size=768x432&format=Png&isCircular=false" alt="Lucky Blocks Battlegrounds" class="game-image" onerror="this.onerror=null; this.src='https://cdn.static.pikoya.com/robloxgo/games/279565647/thumbnail_1'">
+                            <img src="https://thumbnails.roblox.com/v1/games/icons?universeIds=279565647&size=768x432&format=Png&isCircular=false" alt="Lucky Blocks Battlegrounds" class="game-image" onerror="this.onerror=null; this.src='https://cdn.static.pikoya.com/robloxgo/games/279565647/thumbnail_2'">
+                        </div>
+                        <div class="game-content">
+                            <h3 class="game-title">Lucky Blocks Battlegrounds</h3>
+                            <p class="game-description">Open mystery lucky blocks and get random powerful gears to battle other players! Each block has different rarities with unique weapons and abilities. Our script provides auto-open, auto-farm, ESP, and all premium combat features.</p>
+                            <div class="game-script-box">
+                                <code class="game-script-code">loadstring(game:HttpGet("https://blessed.fun/scripts/luckyblock/loader.lua"))()</code>
+                                <button class="game-script-copy" data-script='loadstring(game:HttpGet("https://blessed.fun/scripts/luckyblock/loader.lua"))()' title="Copy">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="game-links">
+                                <a href="https://www.roblox.com/games/662417684/LUCKY-BLOCKS-Battlegrounds" class="btn btn-roblox" target="_blank">Play on Roblox</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Executors Section -->
+        <section class="executors" id="executors">
+            <div class="container">
+                <div class="section-tag">Executors</div>
+                <h2 class="section-title">Supported Executors</h2>
+                <p class="section-subtitle">Scripts work with these executors</p>
+                <div class="executors-grid">
+                    <a href="https://volt.bz" target="_blank" class="executor-card">
+                        <div class="executor-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                                <rect x="9" y="9" width="6" height="6"></rect>
+                                <line x1="9" y1="1" x2="9" y2="4"></line>
+                                <line x1="15" y1="1" x2="15" y2="4"></line>
+                                <line x1="9" y1="20" x2="9" y2="23"></line>
+                                <line x1="15" y1="20" x2="15" y2="23"></line>
+                                <line x1="20" y1="9" x2="23" y2="9"></line>
+                                <line x1="20" y1="14" x2="23" y2="14"></line>
+                                <line x1="1" y1="9" x2="4" y2="9"></line>
+                                <line x1="1" y1="14" x2="4" y2="14"></line>
+                            </svg>
+                        </div>
+                        <h3 class="executor-name">Volt</h3>
+                        <p class="executor-platform"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect></svg> PC</p>
+                        <span class="executor-link">Visit Website →</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Showcase Section -->
+        <section class="showcase" id="showcase">
+            <div class="container">
+                <div class="section-tag">Showcase</div>
+                <h2 class="section-title">Blessed Hub Universal</h2>
+                <p class="section-subtitle">ESP, Aimbot & more — all in one powerful script</p>
+                <div class="showcase-wrapper">
+                    <div class="showcase-gameview">
+                        <!-- Map Background -->
+                        <div class="showcase-map">
+                            <div class="showcase-map-grid"></div>
+                            <div class="showcase-map-building showcase-building-1"></div>
+                            <div class="showcase-map-building showcase-building-2"></div>
+                            <div class="showcase-map-building showcase-building-3"></div>
+                            <div class="showcase-map-building showcase-building-4"></div>
+                        </div>
+                        <div class="showcase-backdrop"></div>
+                        <!-- Bullet Origin (gun position) -->
+                        <div class="showcase-bullet-origin" id="showcaseBulletOrigin"></div>
+                        <!-- Bullet Tracers - going to heads -->
+                        <div class="showcase-bullet showcase-bullet-1"></div>
+                        <div class="showcase-bullet showcase-bullet-2"></div>
+                        <div class="showcase-bullet showcase-bullet-3"></div>
+                        <!-- Aimbot FOV Circle -->
+                        <div class="showcase-fov" id="showcaseFov"></div>
+                        <!-- ESP Elements - Character 1 -->
+                        <div class="showcase-esp-box showcase-esp-1" id="showcaseEsp1">
+                            <div class="showcase-character">
+                                <div class="showcase-char-head"></div>
+                                <div class="showcase-char-body"></div>
+                            </div>
+                            <span class="showcase-health-text" id="showcaseHealth1">80 HP</span>
+                            <div class="showcase-healthbar" id="showcaseHealthbar1">
+                                <div class="showcase-health-fill" style="width: 80%"></div>
+                            </div>
+                            <div class="showcase-tracer" id="showcaseTracer1"></div>
+                        </div>
+                        <!-- ESP Elements - Character 2 -->
+                        <div class="showcase-esp-box showcase-esp-2" id="showcaseEsp2">
+                            <div class="showcase-character">
+                                <div class="showcase-char-head"></div>
+                                <div class="showcase-char-body"></div>
+                            </div>
+                            <span class="showcase-health-text" id="showcaseHealth2">45 HP</span>
+                            <div class="showcase-healthbar" id="showcaseHealthbar2">
+                                <div class="showcase-health-fill" style="width: 45%"></div>
+                            </div>
+                            <div class="showcase-tracer" id="showcaseTracer2"></div>
+                        </div>
+                        <!-- ESP Elements - Character 3 -->
+                        <div class="showcase-esp-box showcase-esp-3" id="showcaseEsp3">
+                            <div class="showcase-character">
+                                <div class="showcase-char-head"></div>
+                                <div class="showcase-char-body"></div>
+                            </div>
+                            <span class="showcase-health-text" id="showcaseHealth3">100 HP</span>
+                            <div class="showcase-healthbar" id="showcaseHealthbar3">
+                                <div class="showcase-health-fill" style="width: 100%"></div>
+                            </div>
+                            <div class="showcase-tracer" id="showcaseTracer3"></div>
+                        </div>
+                    </div>
+                    <div class="showcase-ui">
+                        <div class="showcase-ui-header">
+                            <span class="showcase-ui-title">Blessed Hub</span>
+                            <span class="showcase-ui-badge">Universal</span>
+                        </div>
+                        <div class="showcase-ui-content">
+                            <div class="showcase-ui-section">
+                                <span class="showcase-ui-section-title">Combat</span>
+                                <div class="showcase-ui-item">
+                                    <span>Target Part</span>
+                                    <span class="showcase-ui-value">Head</span>
+                                </div>
+                            </div>
+                            <div class="showcase-ui-section">
+                                <span class="showcase-ui-section-title">Visuals</span>
+                                <div class="showcase-ui-item">
+                                    <span>ESP Boxes</span>
+                                    <div class="showcase-ui-toggle showcase-ui-toggle-on" data-toggle="esp" title="ESP kutularını aç/kapat"></div>
+                                </div>
+                                <div class="showcase-ui-item">
+                                    <span>Tracers</span>
+                                    <div class="showcase-ui-toggle showcase-ui-toggle-on" data-toggle="tracers" title="Tracer çizgilerini aç/kapat"></div>
+                                </div>
+                                <div class="showcase-ui-item">
+                                    <span>Health Bar</span>
+                                    <div class="showcase-ui-toggle showcase-ui-toggle-on" data-toggle="healthbar" title="Can barlarını aç/kapat"></div>
+                                </div>
+                                <div class="showcase-ui-item">
+                                    <span>FOV Circle</span>
+                                    <div class="showcase-ui-toggle showcase-ui-toggle-on" data-toggle="fov" title="FOV dairesini aç/kapat"></div>
+                                </div>
+                                <div class="showcase-ui-item">
+                                    <span>Mermi İzleri</span>
+                                    <div class="showcase-ui-toggle showcase-ui-toggle-on" data-toggle="bullets" title="Kafaya giden mermi izlerini aç/kapat"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Developers Section -->
+        <section class="developers" id="developers">
+            <div class="container">
+                <div class="section-tag">Team</div>
+                <h2 class="section-title">Developers</h2>
+                <p class="section-subtitle">Meet the team behind Blessed Hub</p>
+                <div class="developers-grid">
+                    <div class="developer-card">
+                        <h3 class="developer-name">dausita</h3>
+                        <p class="developer-role">Founder & Lead Dev</p>
+                    </div>
+                    <div class="developer-card">
+                        <h3 class="developer-name">beraatwr</h3>
+                        <p class="developer-role">Owner</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-left">
+            <div class="footer-logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <ellipse cx="12" cy="14" rx="8" ry="9" fill="#fbbf24" stroke="#f59e0b" stroke-width="1.5"/>
+                    <ellipse cx="12" cy="13" rx="7" ry="8" fill="#fcd34d"/>
+                    <path d="M8 10 Q12 8 16 10" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                    <path d="M9 7 Q12 5 15 7" stroke="#f59e0b" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.7"/>
+                    <path d="M10 4 Q12 3 14 4" stroke="#f59e0b" stroke-width="0.8" stroke-linecap="round" fill="none" opacity="0.5"/>
+                </svg>
+                <span>blessed.fun</span>
+            </div>
+        </div>
+        <div class="footer-right">
+            <span class="footer-copyright">© 2026 blessed.fun</span>
+            <div class="footer-links">
+                <a href="#" class="footer-link" id="privacyPolicyLink">Privacy Policy</a>
+                <a href="#" class="footer-link" id="termsOfServiceLink">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Privacy Policy Modal -->
+    <div class="modal" id="privacyPolicyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Privacy Policy</h2>
+                <button class="modal-close" id="closePrivacyModal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-updated">Last updated: February 2026</p>
+                <div class="modal-section">
+                    <h3 class="modal-section-title">1. Information We Collect</h3>
+                    <div class="modal-section-content">
+                        <p><strong>Hardware Identifier (HWID):</strong> Our software directly collects your Hardware Identifier (HWID) for licensing and anti-abuse purposes. By using blessed.fun, you consent to this collection.</p>
+                        <p><strong>IP Address:</strong> Our key system providers (Luarmor and Work.Ink) collect IP addresses for secure step tracking and verification. This information is used solely for key validation and is never leaked or sold.</p>
+                        <p><strong>Discord Information:</strong> If you join our Discord server, your Discord username and ID may be associated with your license for support and verification purposes.</p>
+                    </div>
+                </div>
+                <div class="modal-section">
+                    <h3 class="modal-section-title">2. How We Use Your Information</h3>
+                    <div class="modal-section-content">
+                        <p>We use the collected information solely for:</p>
+                        <ul>
+                            <li>License verification and validation</li>
+                            <li>Preventing abuse and unauthorized access</li>
+                            <li>Providing customer support</li>
+                            <li>Improving our services</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-section">
+                    <h3 class="modal-section-title">3. Data Security</h3>
+                    <div class="modal-section-content">
+                        <p>We implement industry-standard security measures to protect your information. However, no method of transmission over the internet is 100% secure, and we cannot guarantee absolute security.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-modal-close" id="closePrivacyModalBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms of Service Modal -->
+    <div class="modal" id="termsOfServiceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Terms of Service</h2>
+                <button class="modal-close" id="closeTermsModal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-updated">Last updated: February 2026</p>
+                <div class="modal-section">
+                    <h3 class="modal-section-title">1. Acceptance of Terms</h3>
+                    <div class="modal-section-content">
+                        <p>By downloading or using blessed.fun, you agree to be bound by these Terms of Service. If you do not agree, do not use our software.</p>
+                    </div>
+                </div>
+                <div class="modal-section">
+                    <h3 class="modal-section-title">2. HWID Collection</h3>
+                    <div class="modal-section-content">
+                        <p>By using our products, you consent to the collection of your Hardware Identifier (HWID). This is required for license verification and abuse prevention.</p>
+                    </div>
+                </div>
+                <div class="modal-section">
+                    <h3 class="modal-section-title">3. Roblox Account Disclaimer</h3>
+                    <div class="modal-section-content">
+                        <p>We are not liable for any issues, bans, suspensions, or other problems that may occur with your Roblox account(s) as a result of using blessed.fun. You use our software at your own risk.</p>
+                    </div>
+                </div>
+                <div class="modal-section">
+                    <h3 class="modal-section-title">4. Prohibited Uses</h3>
+                    <div class="modal-section-content">
+                        <p>You agree not to:</p>
+                        <ul>
+                            <li>Use our software for any illegal purposes</li>
+                            <li>Attempt to reverse engineer or modify our software</li>
+                            <li>Share or distribute your license key</li>
+                            <li>Use our software to harm or exploit others</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-section">
+                    <h3 class="modal-section-title">5. Limitation of Liability</h3>
+                    <div class="modal-section-content">
+                        <p>blessed.fun is provided "as is" without warranties of any kind. We shall not be liable for any damages arising from the use or inability to use our software.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-modal-close" id="closeTermsModalBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <nav class="mobile-nav">
+            <a href="#features" class="mobile-nav-link">Features</a>
+            <a href="#games" class="mobile-nav-link">Games</a>
+            <a href="#executors" class="mobile-nav-link">Executors</a>
+            <a href="#showcase" class="mobile-nav-link">Showcase</a>
+            <a href="#developers" class="mobile-nav-link">Developers</a>
+            <a href="https://discord.gg/BGJ5wsAQXy" target="_blank" class="mobile-nav-link">Discord</a>
+        </nav>
+    </div>
+
+    <script>
+// Theme & Effects System
+const THEME_STORAGE = 'blessedhub_theme';
+
+function loadSettings() {
+    try {
+        return JSON.parse(localStorage.getItem(THEME_STORAGE) || '{}');
+    } catch {
+        return {};
+    }
+}
+
+function saveSettings(settings) {
+    localStorage.setItem(THEME_STORAGE, JSON.stringify(settings));
+}
+
+// Theme Panel - run after DOM ready
+function initThemePanel() {
+    const themePanel = document.getElementById('themePanel');
+    const themeSettingsBtn = document.getElementById('themeSettingsBtn');
+    const themePanelClose = document.getElementById('themePanelClose');
+    const themePanelOverlay = document.getElementById('themePanelOverlay');
+
+    function openThemePanel(e) {
+        e?.preventDefault();
+        e?.stopPropagation();
+        themePanel?.classList.add('active');
+        themePanelOverlay?.classList.add('active');
+    }
+
+    function closeThemePanel(e) {
+        e?.preventDefault();
+        themePanel?.classList.remove('active');
+        themePanelOverlay?.classList.remove('active');
+    }
+
+    if (themeSettingsBtn) {
+        themeSettingsBtn.addEventListener('click', openThemePanel, false);
+    }
+    if (themePanelClose) {
+        themePanelClose.addEventListener('click', closeThemePanel, false);
+    }
+    if (themePanelOverlay) {
+        themePanelOverlay.addEventListener('click', closeThemePanel, false);
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initThemePanel);
+} else {
+    initThemePanel();
+}
+
+// Snow Effect
+const snowContainer = document.getElementById('snowContainer');
+function createSnowflakes(count = 50) {
+    if (!snowContainer) return;
+    snowContainer.innerHTML = '';
+    for (let i = 0; i < count; i++) {
+        const flake = document.createElement('div');
+        flake.className = 'snowflake';
+        flake.style.left = Math.random() * 100 + '%';
+        flake.style.animationDelay = Math.random() * 10 + 's';
+        flake.style.animationDuration = (5 + Math.random() * 10) + 's';
+        flake.style.opacity = 0.3 + Math.random() * 0.5;
+        flake.style.transform = `scale(${0.5 + Math.random()})`;
+        snowContainer.appendChild(flake);
+    }
+}
+
+// Rain Effect
+const rainContainer = document.getElementById('rainContainer');
+function createRainDrops(count = 80) {
+    if (!rainContainer) return;
+    rainContainer.innerHTML = '';
+    for (let i = 0; i < count; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'raindrop';
+        drop.style.left = Math.random() * 100 + '%';
+        drop.style.animationDelay = Math.random() * 2 + 's';
+        drop.style.animationDuration = (0.5 + Math.random() * 0.5) + 's';
+        rainContainer.appendChild(drop);
+    }
+}
+
+// Effect Toggles
+const effects = {
+    snow: { container: snowContainer, create: createSnowflakes },
+    rain: { container: rainContainer, create: createRainDrops },
+    bgImage: { element: document.getElementById('bgImageOverlay') },
+    particles: { element: document.querySelector('.background-grid') }
+};
+
+document.querySelectorAll('.theme-toggle').forEach(toggle => {
+    toggle.addEventListener('click', function () {
+        const effect = this.getAttribute('data-effect');
+        const settings = loadSettings();
+        const isOn = this.classList.toggle('theme-toggle-on');
+
+        if (effect === 'snow') {
+            if (isOn) {
+                createSnowflakes();
+                snowContainer?.classList.add('active');
+                effects.rain.container?.classList.remove('active');
+                document.getElementById('toggleRain')?.classList.remove('theme-toggle-on');
+                settings.rain = false;
+            } else {
+                snowContainer?.classList.remove('active');
+                snowContainer?.innerHTML = '';
+            }
+            settings.snow = isOn;
+        } else if (effect === 'rain') {
+            if (isOn) {
+                createRainDrops();
+                rainContainer?.classList.add('active');
+                effects.snow.container?.classList.remove('active');
+                document.getElementById('toggleSnow')?.classList.remove('theme-toggle-on');
+                settings.snow = false;
+            } else {
+                rainContainer?.classList.remove('active');
+                rainContainer?.innerHTML = '';
+            }
+            settings.rain = isOn;
+        } else if (effect === 'bgImage') {
+            document.getElementById('bgImageOverlay')?.classList.toggle('active', isOn);
+            settings.bgImage = isOn;
+        } else if (effect === 'particles') {
+            document.querySelector('.background-grid')?.classList.toggle('hidden', !isOn);
+            settings.particles = isOn;
+        }
+
+        saveSettings(settings);
+    });
+});
+
+// Theme Options
+document.querySelectorAll('.theme-option').forEach(btn => {
+    btn.addEventListener('click', function () {
+        document.querySelectorAll('.theme-option').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const theme = this.getAttribute('data-theme');
+        document.body.setAttribute('data-theme', theme || 'dark');
+        saveSettings({ ...loadSettings(), theme: theme || 'dark' });
+    });
+});
+
+// Apply saved settings on load
+document.addEventListener('DOMContentLoaded', () => {
+    const settings = loadSettings();
+
+    if (settings.snow) {
+        createSnowflakes();
+        snowContainer?.classList.add('active');
+        document.getElementById('toggleSnow')?.classList.add('theme-toggle-on');
+    }
+    if (settings.rain) {
+        createRainDrops();
+        rainContainer?.classList.add('active');
+        document.getElementById('toggleRain')?.classList.add('theme-toggle-on');
+    }
+    if (settings.bgImage) {
+        document.getElementById('bgImageOverlay')?.classList.add('active');
+        document.getElementById('toggleBgImage')?.classList.add('theme-toggle-on');
+    }
+    if (settings.particles === false) {
+        document.querySelector('.background-grid')?.classList.add('hidden');
+        document.getElementById('toggleParticles')?.classList.remove('theme-toggle-on');
+    } else {
+        document.getElementById('toggleParticles')?.classList.add('theme-toggle-on');
+    }
+    if (settings.theme) {
+        document.body.setAttribute('data-theme', settings.theme);
+        document.querySelectorAll('.theme-option').forEach(b => {
+            b.classList.toggle('active', b.getAttribute('data-theme') === settings.theme);
+        });
+    }
+});
+
+</script>
+    <script>
+// Mobile Menu Toggle
+const hamburgerMenu = document.getElementById('hamburgerMenu');
+const mobileMenu = document.getElementById('mobileMenu');
+
+hamburgerMenu.addEventListener('click', () => {
+    hamburgerMenu.classList.toggle('active');
+    mobileMenu.classList.toggle('active');
+});
+
+// Close mobile menu when clicking on a link
+const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+mobileNavLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        hamburgerMenu.classList.remove('active');
+        mobileMenu.classList.remove('active');
+    });
+});
+
+// Close mobile menu when clicking outside
+mobileMenu.addEventListener('click', (e) => {
+    if (e.target === mobileMenu) {
+        hamburgerMenu.classList.remove('active');
+        mobileMenu.classList.remove('active');
+    }
+});
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+
+// Add scroll effect to header
+let lastScroll = 0;
+const header = document.querySelector('.header');
+
+window.addEventListener('scroll', () => {
+    const currentScroll = window.pageYOffset;
+    
+    if (currentScroll > 100) {
+        header.style.background = 'rgba(0, 0, 0, 0.95)';
+    } else {
+        header.style.background = 'rgba(0, 0, 0, 0.8)';
+    }
+    
+    lastScroll = currentScroll;
+});
+
+// Add parallax effect to background grid
+window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset;
+    const grid = document.querySelector('.background-grid');
+    if (grid) {
+        grid.style.transform = `perspective(1000px) rotateX(60deg) translateY(${scrolled * 0.2}px)`;
+    }
+});
+
+// Intersection Observer for fade-in animations
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, observerOptions);
+
+// Observe feature cards
+document.querySelectorAll('.feature-card').forEach(card => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px)';
+    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(card);
+});
+
+// Game script copy functionality
+document.querySelectorAll('.game-script-copy').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const script = btn.getAttribute('data-script');
+        if (script) {
+            navigator.clipboard.writeText(script).then(() => {
+                btn.classList.add('copied');
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                `;
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => console.error('Copy failed:', err));
+        }
+    });
+});
+
+// Copy code functionality
+const copyCodeBtn = document.getElementById('copyCode');
+if (copyCodeBtn) {
+    copyCodeBtn.addEventListener('click', () => {
+        const codeContent = document.querySelector('.code-content');
+        if (codeContent) {
+            const text = codeContent.textContent.trim();
+            navigator.clipboard.writeText(text).then(() => {
+                // Visual feedback
+                const originalHTML = copyCodeBtn.innerHTML;
+                copyCodeBtn.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                `;
+                copyCodeBtn.style.color = 'var(--accent-green)';
+                
+                setTimeout(() => {
+                    copyCodeBtn.innerHTML = originalHTML;
+                    copyCodeBtn.style.color = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+    });
+}
+
+// Maximize code functionality
+const maximizeCodeBtn = document.getElementById('maximizeCode');
+if (maximizeCodeBtn) {
+    maximizeCodeBtn.addEventListener('click', () => {
+        const codeBox = document.querySelector('.code-box');
+        if (codeBox) {
+            if (codeBox.classList.contains('maximized')) {
+                codeBox.classList.remove('maximized');
+                maximizeCodeBtn.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                    </svg>
+                `;
+            } else {
+                codeBox.classList.add('maximized');
+                maximizeCodeBtn.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
+                    </svg>
+                `;
+            }
+        }
+    });
+}
+
+// Observe stat cards
+document.querySelectorAll('.stat-card').forEach(card => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px)';
+    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(card);
+});
+
+// Observe developer cards
+document.querySelectorAll('.developer-card').forEach(card => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px)';
+    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(card);
+});
+
+// Observe executor cards
+document.querySelectorAll('.executor-card').forEach(card => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px)';
+    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(card);
+});
+
+// Observe game cards
+document.querySelectorAll('.game-card').forEach(card => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px)';
+    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(card);
+});
+
+// Observe showcase elements
+document.querySelectorAll('.showcase-wrapper').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(30px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+});
+
+// Showcase toggle functionality
+const showcaseToggles = {
+    esp: ['showcaseEsp1', 'showcaseEsp2', 'showcaseEsp3'],
+    tracers: ['showcaseTracer1', 'showcaseTracer2', 'showcaseTracer3'],
+    healthbar: ['showcaseHealthbar1', 'showcaseHealthbar2', 'showcaseHealthbar3', 'showcaseHealth1', 'showcaseHealth2', 'showcaseHealth3'],
+    fov: ['showcaseFov'],
+    bullets: ['showcaseBullet1', 'showcaseBullet2', 'showcaseBullet3']
+};
+
+document.querySelectorAll('.showcase-ui-toggle[data-toggle]').forEach(toggle => {
+    toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const target = toggle.getAttribute('data-toggle');
+        const ids = showcaseToggles[target];
+        const isOn = toggle.classList.contains('showcase-ui-toggle-on');
+
+        if (target === 'esp') {
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.toggle('showcase-hidden', isOn);
+            });
+        } else if (ids) {
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.toggle('showcase-hidden', isOn);
+            });
+        }
+
+        if (target === 'bullets') {
+            document.querySelectorAll('.showcase-bullet').forEach(el => {
+                el.classList.toggle('showcase-hidden', isOn);
+            });
+            const origin = document.getElementById('showcaseBulletOrigin');
+            if (origin) origin.classList.toggle('showcase-hidden', isOn);
+        }
+
+        toggle.classList.toggle('showcase-ui-toggle-on', !isOn);
+        toggle.classList.toggle('showcase-ui-toggle-off', isOn);
+    });
+});
+
+// Observe comparison cards
+document.querySelectorAll('.comparison-card').forEach(card => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px)';
+    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(card);
+});
+
+// Modal functionality
+const privacyPolicyModal = document.getElementById('privacyPolicyModal');
+const termsOfServiceModal = document.getElementById('termsOfServiceModal');
+const privacyPolicyLink = document.getElementById('privacyPolicyLink');
+const termsOfServiceLink = document.getElementById('termsOfServiceLink');
+
+// Open Privacy Policy modal
+if (privacyPolicyLink) {
+    privacyPolicyLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        privacyPolicyModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+}
+
+// Close Privacy Policy modal
+const closePrivacyButtons = [
+    document.getElementById('closePrivacyModal'),
+    document.getElementById('closePrivacyModalBtn')
+];
+
+closePrivacyButtons.forEach(btn => {
+    if (btn) {
+        btn.addEventListener('click', () => {
+            privacyPolicyModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    }
+});
+
+// Open Terms of Service modal
+if (termsOfServiceLink) {
+    termsOfServiceLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        termsOfServiceModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+}
+
+// Close Terms of Service modal
+const closeTermsButtons = [
+    document.getElementById('closeTermsModal'),
+    document.getElementById('closeTermsModalBtn')
+];
+
+closeTermsButtons.forEach(btn => {
+    if (btn) {
+        btn.addEventListener('click', () => {
+            termsOfServiceModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    }
+});
+
+// Close modals when clicking outside
+[privacyPolicyModal, termsOfServiceModal].forEach(modal => {
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+    }
+});
+
+// Close modals with Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        privacyPolicyModal.classList.remove('active');
+        termsOfServiceModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+});
+
+</script>
+    <script>
+    function formatNumber(n) {
+        return n.toLocaleString('tr-TR');
+    }
+
+    async function fetchExecutions() {
+        try {
+            const res = await fetch('/api/execution');
+            const data = await res.json();
+            const totalEl = document.getElementById('totalExecutions');
+            const dailyEl = document.getElementById('dailyExecutions');
+            if (totalEl) totalEl.textContent = formatNumber(data.total || 0);
+            if (dailyEl) dailyEl.textContent = formatNumber(data.daily || 0);
+        } catch (e) {
+            const totalEl = document.getElementById('totalExecutions');
+            const dailyEl = document.getElementById('dailyExecutions');
+            if (totalEl) totalEl.textContent = '—';
+            if (dailyEl) dailyEl.textContent = '—';
+        }
+    }
+
+    fetchExecutions();
+    // Her 30 saniyede bir güncelle
+    setInterval(fetchExecutions, 30000);
+    </script>
+</body>
+</html>
